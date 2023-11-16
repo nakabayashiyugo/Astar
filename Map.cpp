@@ -40,7 +40,7 @@ void Map::Serth()
 				calcMathX += dir_Beside[i];
 			else continue;
 
-			map_[calcMathY][calcMathX].G = cost;
+			if (map_[calcMathY][calcMathX].F < 0) map_[calcMathY][calcMathX].G = cost;
 			map_[calcMathY][calcMathX].F = map_[calcMathY][calcMathX].G + map_[calcMathY][calcMathX].H;
 		}
 		for (int i = 0; i < map_.size(); i++)
@@ -49,7 +49,7 @@ void Map::Serth()
 			{
 				if (map_[i][j].F >= 0 && (i != StartMath.y || j != StartMath.x))
 				{
-					if (map_[curMath_.y][curMath_.x].F > map_[i][j].F)
+					if (map_[curMath_.y][curMath_.x].F >= map_[i][j].F)
 					{
 						curMath_.y = i;
 						curMath_.x = j;
