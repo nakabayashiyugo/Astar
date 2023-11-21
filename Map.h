@@ -11,6 +11,7 @@ struct AstarTable
 	int H;
 	int F;
 	bool isway;
+	bool isstop;
 };
 
 struct math
