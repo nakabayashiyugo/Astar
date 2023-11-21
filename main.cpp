@@ -3,7 +3,8 @@
 
 int main()
 {
-	Map* pMap = new Map(8, 9);
+	
+	Map* pMap = new Map();
 
 	pMap->Serth();
 	pMap->PrintMap();
