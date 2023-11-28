@@ -26,6 +26,7 @@ const int dir_Beside[4] = { 0, 1, 0, -1 };
 class Map
 {
 	std::vector<std::vector<AstarTable>> map_;
+	std::vector<std::vector<int>> f_serch_;
 
 	math curMath_;
 
