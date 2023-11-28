@@ -95,11 +95,6 @@ void Map::Serth()
 			{
 				if (map_[i][j].F >= 0 && (i != StartMath.y || j != StartMath.x))
 				{
-					if (map_[curMath_.y][curMath_.x].isstop)
-					{
-						curMath_.y = i;
-						curMath_.x = j;
-					}
 					if (map_[curMath_.y][curMath_.x].F > map_[i][j].F)
 					{
 						curMath_.y = i;
@@ -119,9 +114,9 @@ void Map::Serth()
 
 		if (prevMath.x == curMath_.x && prevMath.y == curMath_.y)
 		{
-			//map_[prevMath.y][prevMath.x].F = 999;
+			map_[prevMath.y][prevMath.x].F = 999;
 			//map_[prevMath.y].erase(map_[prevMath.y].begin() + prevMath.x);
-			map_[prevMath.y][prevMath.x].isstop = true;
+			//map_[prevMath.y][prevMath.x].isstop = true;
 		}
 		else
 		{
