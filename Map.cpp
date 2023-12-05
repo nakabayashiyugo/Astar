@@ -47,8 +47,8 @@ Map::Map()
 			map_.at(i).at(j).G = -1;
 			map_.at(i).at(j).H = (GoalMath.y - i) * (GoalMath.y - i) + (GoalMath.x - j) * (GoalMath.x - j);
 			map_.at(i).at(j).F = -1;
-			map_.at(i).at(j).isway = false;
-			map_.at(i).at(j).isstop = false;
+			map_.at(i).at(j).isWay = false;
+			map_.at(i).at(j).isStop = false;
 		}
 	}
 	curMath_ = StartMath;
@@ -89,39 +89,7 @@ void Map::Serth()
 				map_[calcMathY][calcMathX].F = map_[calcMathY][calcMathX].G + map_[calcMathY][calcMathX].H;
 			}
 		}
-		for (int i = 0; i < map_.size(); i++)
-		{
-			for (int j = 0; j < map_.at(i).size(); j++)
-			{
-				if (map_[i][j].F >= 0 && (i != StartMath.y || j != StartMath.x))
-				{
-					if (map_[curMath_.y][curMath_.x].F > map_[i][j].F)
-					{
-						curMath_.y = i;
-						curMath_.x = j;
-					}
-					else if (map_[curMath_.y][curMath_.x].F == map_[i][j].F)
-					{
-						if (map_[curMath_.y][curMath_.x].H >= map_[i][j].H)
-						{
-							curMath_.y = i;
-							curMath_.x = j;
-						}
-					}
-				}
-			}
-		}
-
-		if (prevMath.x == curMath_.x && prevMath.y == curMath_.y)
-		{
-			map_[prevMath.y][prevMath.x].F = 999;
-			//map_[prevMath.y].erase(map_[prevMath.y].begin() + prevMath.x);
-			//map_[prevMath.y][prevMath.x].isstop = true;
-		}
-		else
-		{
-			cost++;
-		}
+		MAXSerch(prevMath, cost);
 
 		std::cout << "À•W : (" << curMath_.x << ", " << curMath_.y << ")" << std::endl;
 		std::cout << "À•W : (" << prevMath.x << ", " << prevMath.y << ")" << std::endl;
@@ -130,7 +98,7 @@ void Map::Serth()
 		{
 			break;
 		}
-		PrintMap();
+		//PrintMap();
 	}
 	curMath_ = GoalMath;
 	while (true)
@@ -157,7 +125,7 @@ void Map::Serth()
 				break;
 			}
 		}
-		map_[curMath_.y][curMath_.x].isway = true;
+		map_[curMath_.y][curMath_.x].isWay = true;
 
 		if (curMath_.x == StartMath.x && curMath_.y == StartMath.y)
 		{
@@ -212,7 +180,7 @@ void Map::PrintMap()
 	}
 	std::cout << std::endl;
 
-	/*for (int n = 0; n < map_.size() * 4 + 2; n++)
+	for (int n = 0; n < map_.size() * 4 + 2; n++)
 	{
 		std::cout << "-";
 	}
@@ -233,7 +201,6 @@ void Map::PrintMap()
 		std::cout << std::endl;
 	}
 	std::cout << std::endl;
-*/
 
 	std::cout << std::endl;
 	for (int i = 0; i < map_.size(); i++)
@@ -251,7 +218,7 @@ void Map::PrintMap()
 				{
 					std::cout << "‚f";
 				}
-				else if (map_[i][j].isway == true)
+				else if (map_[i][j].isWay == true)
 				{
 					std::cout << "Ÿ";
 				}
@@ -268,4 +235,45 @@ void Map::PrintMap()
 		std::cout << std::endl;
 	}
 	std::cout << std::endl;
+}
+
+void Map::MAXSerch(math _prevMath, int &_cost)
+{
+	while (true)
+	{
+		for (int i = 0; i < map_.size(); i++)
+		{
+			for (int j = 0; j < map_.at(i).size(); j++)
+			{
+				if (map_[i][j].F >= 0 && (i != StartMath.y || j != StartMath.x) && !map_[i][j].isStop)
+				{
+					if (map_[curMath_.y][curMath_.x].F > map_[i][j].F)
+					{
+						curMath_.y = i;
+						curMath_.x = j;
+					}
+					else if (map_[curMath_.y][curMath_.x].F == map_[i][j].F)
+					{
+						if (map_[curMath_.y][curMath_.x].H >= map_[i][j].H)
+						{
+							curMath_.y = i;
+							curMath_.x = j;
+						}
+					}
+				}
+			}
+		}
+		if (_prevMath.x == curMath_.x && _prevMath.y == curMath_.y)
+		{
+			//map_[_prevMath.y][_prevMath.x].F = 999;
+			//f_serch_[_prevMath.y].erase(f_serch_[_prevMath.y].begin() + _prevMath.x);
+			map_[_prevMath.y][_prevMath.x].isStop = true;
+			curMath_ = StartMath;
+		}
+		else
+		{
+			_cost++;
+			break;
+		}
+	}
 }

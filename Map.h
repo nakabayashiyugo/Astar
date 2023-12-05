@@ -10,8 +10,8 @@ struct AstarTable
 	int G;
 	int H;
 	int F;
-	bool isway;
-	bool isstop;
+	bool isWay;
+	bool isStop;
 };
 
 struct math
@@ -26,7 +26,6 @@ const int dir_Beside[4] = { 0, 1, 0, -1 };
 class Map
 {
 	std::vector<std::vector<AstarTable>> map_;
-	std::vector<std::vector<int>> f_serch_;
 
 	math curMath_;
 
@@ -39,5 +38,7 @@ public:
 	void PrintMap();
 	void SetStartMathX(int x, int y) { StartMath = math{ x, y }; }
 	void SetGoalMathX(int x, int y) { GoalMath = math{ x, y }; }
+
+	void MAXSerch(math _prevMath, int &_cost);
 };
 
