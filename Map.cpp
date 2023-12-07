@@ -45,17 +45,15 @@ Map::Map()
 		{
 			map_.at(i).at(j).table = laby->GetTable(i, j);
 			map_.at(i).at(j).G = -1;
-			map_.at(i).at(j).H = (GoalMath.y - i) * (GoalMath.y - i) + (GoalMath.x - j) * (GoalMath.x - j);
+			map_.at(i).at(j).H =sqrt((GoalMath.y - i) * (GoalMath.y - i) + (GoalMath.x - j) * (GoalMath.x - j));
 			map_.at(i).at(j).F = -1;
 			map_.at(i).at(j).isWay = false;
 			map_.at(i).at(j).isStop = false;
 		}
 	}
 	curMath_ = StartMath;
-	map_[StartMath.y][StartMath.x].F = 999;
 	map_[StartMath.y][StartMath.x].G = 0;
 	map_[StartMath.y][StartMath.x].table = 0;
-	map_[GoalMath.y][GoalMath.x].F = -999;
 	map_[GoalMath.y][GoalMath.x].table = 0;
 
 	delete laby;
@@ -98,7 +96,7 @@ void Map::Serth()
 		{
 			break;
 		}
-		//PrintMap();
+		PrintMap();
 	}
 	curMath_ = GoalMath;
 	while (true)
@@ -237,43 +235,46 @@ void Map::PrintMap()
 	std::cout << std::endl;
 }
 
-void Map::MAXSerch(math _prevMath, int &_cost)
+void Map::MAXSerch(math _prevMath, int& _cost)
 {
-	while (true)
+	for (int i = 0; i < map_.size(); i++)
 	{
-		for (int i = 0; i < map_.size(); i++)
+		for (int j = 0; j < map_.at(i).size(); j++)
 		{
-			for (int j = 0; j < map_.at(i).size(); j++)
+			if (map_[i][j].F >= 0 && !map_[i][j].isStop && (i != StartMath.y || j != StartMath.x))
 			{
-				if (map_[i][j].F >= 0 && (i != StartMath.y || j != StartMath.x) && !map_[i][j].isStop)
+				if (curMath_.y == StartMath.y && curMath_.x == StartMath.x)
 				{
-					if (map_[curMath_.y][curMath_.x].F > map_[i][j].F)
+					curMath_.y = i;
+					curMath_.x = j;
+					continue;
+				}
+				if (map_[curMath_.y][curMath_.x].F > map_[i][j].F)
+				{
+					curMath_.y = i;
+					curMath_.x = j;
+				}
+				else if (map_[curMath_.y][curMath_.x].F == map_[i][j].F)
+				{
+					if (map_[curMath_.y][curMath_.x].H >= map_[i][j].H)
 					{
 						curMath_.y = i;
 						curMath_.x = j;
 					}
-					else if (map_[curMath_.y][curMath_.x].F == map_[i][j].F)
-					{
-						if (map_[curMath_.y][curMath_.x].H >= map_[i][j].H)
-						{
-							curMath_.y = i;
-							curMath_.x = j;
-						}
-					}
 				}
 			}
 		}
-		if (_prevMath.x == curMath_.x && _prevMath.y == curMath_.y)
-		{
-			//map_[_prevMath.y][_prevMath.x].F = 999;
-			//f_serch_[_prevMath.y].erase(f_serch_[_prevMath.y].begin() + _prevMath.x);
-			map_[_prevMath.y][_prevMath.x].isStop = true;
-			curMath_ = StartMath;
-		}
-		else
-		{
-			_cost++;
-			break;
-		}
+	}
+	if (_prevMath.x == curMath_.x && _prevMath.y == curMath_.y)
+	{
+		//map_[_prevMath.y][_prevMath.x].F = 999;
+		//f_serch_[_prevMath.y].erase(f_serch_[_prevMath.y].begin() + _prevMath.x);
+		map_[_prevMath.y][_prevMath.x].isStop = true;
+		curMath_ = StartMath;
+	}
+	else
+	{
+		_cost++;
 	}
 }
+
