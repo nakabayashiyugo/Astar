@@ -45,16 +45,16 @@ Map::Map()
 		{
 			map_.at(i).at(j).table = laby->GetTable(i, j);
 			map_.at(i).at(j).G = -1;
-			map_.at(i).at(j).H =sqrt((GoalMath.y - i) * (GoalMath.y - i) + (GoalMath.x - j) * (GoalMath.x - j));
+			map_.at(i).at(j).H =(GoalMath.y - i) * (GoalMath.y - i) + (GoalMath.x - j) * (GoalMath.x - j);
 			map_.at(i).at(j).F = -1;
 			map_.at(i).at(j).isWay = false;
 			map_.at(i).at(j).isStop = false;
 		}
 	}
 	curMath_ = StartMath;
-	map_[StartMath.y][StartMath.x].G = 0;
-	map_[StartMath.y][StartMath.x].table = 0;
-	map_[GoalMath.y][GoalMath.x].table = 0;
+	map_[StartMath.y][StartMath.x].G = map_[StartMath.y][StartMath.x].F =  0;
+	map_[StartMath.y][StartMath.x].table = map_[GoalMath.y][GoalMath.x].table = 0;
+	map_[StartMath.y][StartMath.x].isStop = true;
 
 	delete laby;
 }
@@ -89,14 +89,11 @@ void Map::Serth()
 		}
 		MAXSerch(prevMath, cost);
 
-		std::cout << "À•W : (" << curMath_.x << ", " << curMath_.y << ")" << std::endl;
-		std::cout << "À•W : (" << prevMath.x << ", " << prevMath.y << ")" << std::endl;
-
 		if (curMath_.x == GoalMath.x && curMath_.y == GoalMath.y)
 		{
 			break;
 		}
-		PrintMap();
+		
 	}
 	curMath_ = GoalMath;
 	while (true)
@@ -134,7 +131,7 @@ void Map::Serth()
 
 void Map::PrintMap()
 {
-	for (int n = 0; n < map_.size() * 4 + 2; n++)
+	for (int n = 0; n < map_.size() * 6 + 1; n++)
 	{
 		std::cout << "-";
 	}
@@ -144,11 +141,11 @@ void Map::PrintMap()
 		std::cout << "|";
 		for (int j = 0; j < map_.at(i).size(); j++)
 		{
-			printf("%3d", map_.at(i).at(j).F);
+			printf("%5d", map_.at(i).at(j).F);
 			std::cout << "|";
 		}
 		std::cout << std::endl;
-		for (int n = 0; n < map_.size() * 4 + 2; n++)
+		for (int n = 0; n < map_.size() * 6 + 1; n++)
 		{
 			std::cout << "-";
 		}
@@ -156,7 +153,8 @@ void Map::PrintMap()
 	}
 	std::cout << std::endl;
 
-	for (int n = 0; n < map_.size() * 4 + 2; n++)
+
+	for (int n = 0; n < map_.size() * 6 + 1; n++)
 	{
 		std::cout << "-";
 	}
@@ -166,11 +164,11 @@ void Map::PrintMap()
 		std::cout << "|";
 		for (int j = 0; j < map_.at(i).size(); j++)
 		{
-			printf("%3d", map_.at(i).at(j).G);
+			printf("%5d", map_.at(i).at(j).G);
 			std::cout << "|";
 		}
 		std::cout << std::endl;
-		for (int n = 0; n < map_.size() * 4 + 2; n++)
+		for (int n = 0; n < map_.size() * 6 + 1; n++)
 		{
 			std::cout << "-";
 		}
@@ -178,29 +176,6 @@ void Map::PrintMap()
 	}
 	std::cout << std::endl;
 
-	for (int n = 0; n < map_.size() * 4 + 2; n++)
-	{
-		std::cout << "-";
-	}
-	std::cout << std::endl;
-	for (int i = 0; i < map_.size(); i++)
-	{
-		std::cout << "|";
-		for (int j = 0; j < map_.at(i).size(); j++)
-		{
-			printf("%3d", map_.at(i).at(j).H);
-			std::cout << "|";
-		}
-		std::cout << std::endl;
-		for (int n = 0; n < map_.size() * 4 + 2; n++)
-		{
-			std::cout << "-";
-		}
-		std::cout << std::endl;
-	}
-	std::cout << std::endl;
-
-	std::cout << std::endl;
 	for (int i = 0; i < map_.size(); i++)
 	{
 		for (int j = 0; j < map_.at(i).size(); j++)
@@ -241,7 +216,7 @@ void Map::MAXSerch(math _prevMath, int& _cost)
 	{
 		for (int j = 0; j < map_.at(i).size(); j++)
 		{
-			if (map_[i][j].F >= 0 && !map_[i][j].isStop && (i != StartMath.y || j != StartMath.x))
+			if (map_[i][j].F >= 0 && !map_[i][j].isStop)
 			{
 				if (curMath_.y == StartMath.y && curMath_.x == StartMath.x)
 				{
